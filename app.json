@@ -1,0 +1,11 @@
+{
+  "pages": [
+    "pages/index/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "集点通",
+    "navigationBarBackgroundColor": "#2C6BED",
+    "navigationBarTextStyle": "white",
+    "backgroundTextStyle": "light"
+  }
+}

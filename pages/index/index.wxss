@@ -1,0 +1,11 @@
+.header {
+  padding-top: 20rpx;
+}
+
+.card {
+  margin-top: 20rpx;
+}
+
+.grid-item {
+  min-height: 180rpx;
+}

@@ -1,0 +1,19 @@
+<view class="container">
+  <view class="header">
+    <view class="header-title">集点通</view>
+    <view class="header-subtitle">校园一站式服务，学习、生活、社交全部聚合。</view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">精选服务</view>
+    <view class="grid">
+      <block wx:for="{{services}}" wx:key="title">
+        <view class="grid-item">
+          <text class="grid-title">{{item.title}}</text>
+          <text class="grid-desc">{{item.desc}}</text>
+          <text class="badge">{{item.tag}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>
