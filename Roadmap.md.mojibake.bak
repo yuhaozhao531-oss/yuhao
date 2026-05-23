@@ -1,0 +1,261 @@
+# ForgeOne Roadmap
+
+更新时间：2026-04-21
+
+## 定位
+
+ForgeOne 当前定位为 `one-stop validation system`，不是泛化业务平台。
+产品核心是 `可控执行`，不是单纯的多 Agent。
+目标用户为普通个人创业者、`0-3` 人小团队，以及数字产品、内容型业务、预售型项目的低成本验证场景。
+
+## 当前状态核对
+
+### 已具备
+
+- [x] 后端基础架构：`FastAPI + 持久化 + WebSocket + 对象存储 + 任务队列 worker`
+- [x] 会话执行主链路：`intake -> classify -> decompose -> parallel_plan -> decision gates -> artifact generation -> complete`
+- [x] LangGraph 编排运行时接入
+- [x] 固定工作流 DAG 与前端工作流预览/编辑器
+- [x] 多 Agent 并行执行：`DesignAgent`、`PackagingAgent`、`CostAgent`、`LaunchPageAgent`、`ResearchAgent`、`PricingAgent`、`ValidationAgent`
+- [x] 人类确认门：`target_audience`、`product_packaging`、`launch_page_copy`
+- [x] 预算控制：总预算守卫、阶段预算守卫、Agent 限额守卫
+- [x] 成本账本、检查点、暂停、恢复、回滚
+- [x] 执行留痕：Agent 日志、决策记录、检查点快照、导出文件
+- [x] 三类首发场景：`digital_product`、`content_business`、`presale_project`
+- [x] 结果导出：`HTML`、`PDF`、`JSON bundle`
+- [x] 用户系统、管理员视图、多租户隔离
+
+### 部分具备
+
+- [~] `idea -> 主控 AI 拆解 -> 子 Agent 并行执行 -> 成本/进度可视化 -> 用户关键确认 -> 输出结果` 主闭环已存在，但拆解与任务图仍是固定蓝图，不是按 idea 动态生成
+- [~] 成本/预算可视化已具备，但 token 维度未形成独立可视化面板
+- [~] 风险信息存在于 Agent 输出与提示词中，但未形成独立风险视图、风险状态机或风险卡片
+- [x] RAG 已接入，并已从按场景目录组织升级为按“商业原子动作”建模；当前支持证据层 + 原子动作层、`approved / legacy_unverified` 区分，以及按动作优先检索
+- [~] 交付物已具备基础验证产物，但仍偏固定模板，尚未覆盖更完整的 `waitlist / 预售页 / 内容资产 / 数字产品包`
+
+### 未具备
+
+- [x] 单入口体验：用户目前不能只输入一个 idea 即启动，会话创建仍要求 `scenario_type` 和 `budget_cap`
+- [ ] 自动场景识别、自动预算建议、自动验证路径选择
+- [ ] 动态任务图生成：当前 `decompose` 只启动预设任务，不会按 idea 生成定制 DAG
+- [x] 基于商业原子动作的知识模型：`找需求 / 定价 / 包装 / 内容生产 / 获客 / 转化 / 交付 / 复购`
+- [ ] 系统级风险管理：风险聚合、风险阈值、风险拦截、风险恢复策略
+- [ ] 用户为什么不用 `ChatGPT / Claude / Gemini` 直接做的系统级差异化能力沉淀
+- [ ] 可持续订阅理由的系统化封装：模板复用、执行记忆、外部执行器、跨项目比较
+
+## 下一阶段优先级
+
+### P0：补齐产品定义缺口
+
+- [x] 改造创建入口为 `单 idea 优先`
+- [x] 新增 `idea intake classifier`，自动识别 `digital_product / content_business / presale_project`
+- [x] 新增预算建议器，允许用户接受系统建议而不是手动填写预算
+- [x] 将首页文案和创建页文案从“多场景业务验证控制台”收敛到“AI 原生创业验证操作系统 / validation system”
+- [ ] 增加“为什么不是通用聊天工具”的产品说明与系统能力展示
+
+### P1：把固定编排升级为动态编排
+
+- [x] 将固定 `TASK_BLUEPRINT / AGENT_BLUEPRINT / DEFAULT_WORKFLOW` 升级为可按 idea 生成的任务图
+- [x] 为主控层增加任务图生成、节点依赖、分支条件、失败策略、恢复策略
+- [x] 让决策门不再固定为 3 张卡，而是可按任务图动态生成
+- [x] 让预算守卫、回滚点、恢复点跟随动态任务图自动布置
+
+### P2：重构商业知识层
+
+- [x] 将知识库从按场景目录组织，升级为按商业原子动作组织
+- [x] 建立原子动作与业务形态的组合层
+- [x] 为 Agent 提供可调用的结构化商业知识，而不是仅检索文本片段
+- [x] 明确低复杂度首发场景下的动作模板：数字产品、内容型业务、预售型项目
+- [x] 增加候选来源发现与暂存区导入链路
+- [x] 增加人工审核工作台：来源审核、摘录审核、Atom 审核
+- [x] 增加正式入库接口与审核发布流程
+- [x] 增加开放来源采集能力与来源白名单管理
+
+### P3：补齐可控执行面板
+
+- [x] 增加 token 使用可视化
+- [x] 增加风险面板：风险来源、风险等级、当前状态、是否阻塞
+- [x] 增加执行透明化面板：每步输入、输出、成本、耗时、依赖关系
+- [x] 增加恢复面板：最近安全点、可恢复范围、回滚影响预估
+
+### P4：扩展验证交付物
+
+- [x] 增加 `waitlist page`
+- [x] 增加 `presale page`
+- [x] 增加 `content asset pack`
+- [x] 增加 `digital product starter bundle`
+- [x] 增加 `go / no-go validation report`
+- [x] 增加按场景差异化交付模板，而不是所有场景复用同一组固定 artifact
+
+### P5：接入真实外部执行器
+
+- [~] 邮件、表单、Webhook、CRM、分析工具已完成 ForgeOne 内部执行栈与 mock provider 闭环；真实第三方接入未完成
+- [x] 接入落地页发布能力
+- [~] `waitlist / preorder / payment` 已完成 ForgeOne 内部公共接口与 mock provider 闭环；真实第三方接入未完成
+- [x] 建立“系统级 orchestration 才有价值”的外部执行链路：同一 lead 的 `waitlist -> preorder -> payment` journey、handoff event 与 orchestration summary 已落地
+
+### P6：订阅价值与平台化准备
+
+- 说明：`P6` 不是首个可上线版本的阻塞项，当前可后置到生产闭环之后再做。
+- 说明：`P6` 决定 ForgeOne 是否从“一次性执行工具”升级为“可持续订阅产品”，因此属于长期必须完成项。
+- 说明：前三项主要影响复购、留存、团队协作与运营效率；第四项主要影响后续平台化边界与架构收敛。
+
+- [ ] 建立跨项目复用的验证模板与知识沉淀
+- [ ] 建立项目对比、历史复盘、复用建议
+- [ ] 建立团队协作、评论、审计日志、角色权限
+- [ ] 评估下层知识图谱与 Agent 网络的平台化边界
+
+## 未来上线必完成
+
+### 外部接入上线门槛
+
+- [x] 将 `form / waitlist / preorder / payment / email / webhook / crm / analytics` 统一收敛为 provider adapter 接口，固定 `submit / track / webhook / healthcheck` 能力面
+- [x] 完成至少一条真实第三方闭环：`published page -> form/waitlist -> email -> CRM -> analytics`
+- 说明：当前最小真实第三方闭环默认实现为 `Resend(email) + HubSpot(CRM) + GA4(analytics)`；未配置真实 provider 时系统仍会回退到 mock provider
+
+#### 手动添加 API
+
+> 邮件 API
+> `FORGEONE_EMAIL_PROVIDER=resend`
+> `FORGEONE_RESEND_API_KEY=re_xxx`
+> `FORGEONE_RESEND_FROM_EMAIL=onboarding@resend.dev`
+> 说明：`onboarding@resend.dev` 仅适合测试；按 Resend 官方说明，使用 `resend.dev` 域名时通常只能发到你自己的邮箱，正式使用需要换成你已验证域名下的地址
+>
+> CRM API
+> `FORGEONE_CRM_PROVIDER=hubspot`
+> `FORGEONE_HUBSPOT_ACCESS_TOKEN=pat-xxx`
+>
+> Analytics API
+> `FORGEONE_ANALYTICS_PROVIDER=ga4`
+> `FORGEONE_GA4_MEASUREMENT_ID=G-BTHBJ3Z8RW`
+> `FORGEONE_GA4_API_SECRET=AOS0JDaxQ3mn06U_niOT3w`
+
+- [ ] 将 `waitlist / preorder / payment` 从 mock provider 切换到真实 provider，并补齐生产环境配置
+- [ ] 为所有外部调用补齐 `provider config`、secret 管理、环境隔离、sandbox/test mode
+- [ ] 为所有外部调用补齐 idempotency key、重试、超时、dead-letter queue、失败补偿
+
+### Webhook 与支付上线门槛
+
+- [ ] 为所有 webhook 补齐 signature verification、event deduplication、replay protection、raw payload audit log
+- [ ] 建立支付订单状态机，覆盖 `checkout -> authorized -> captured / refunded / canceled`
+- [ ] 补齐支付对账、退款/撤销、金额篡改防护、回调最终一致性处理
+
+### 落地页发布上线门槛
+
+- [ ] 为发布页补齐真实域名、CDN、缓存策略、发布回滚
+- [ ] 为发布页补齐公开访问安全基线与可用性监控
+
+### 观测与测试上线门槛
+
+- [ ] 为外部接入补齐审计日志、监控、告警、限流、滥用防护
+- [ ] 建立 adapter contract tests、fake provider integration tests、external dispatch smoke tests
+
+### 公网入口与滥用防护门槛
+
+- [ ] 为公开 `form / waitlist / preorder / payment` 接口补齐 `rate limit`、`captcha / honeypot`、IP / UA 基础风控、重复提交检测、黑名单与隔离队列
+- [ ] 为公开提交链路补齐 submission-level `idempotency key`、去重规则、请求 `trace_id` 与审计关联，避免重复扣费、重复入 CRM、重复触发 webhook
+
+### 生产安全与配置门槛
+
+- [ ] 建立租户级 `provider registry` 与凭据管理台：支持 `sandbox/live` 切换、健康检查、配额、熔断、禁用与到期告警
+- [ ] 禁止默认 `admin/admin`、默认 `FORGEONE_AUTH_SECRET_KEY`、默认开放配置上线；启动阶段增加 fail-fast 环境完整性校验
+  - 现状：数据库存在普通用户 `normal@example.com`；密码仅以 `password_hash + password_salt` 形式存储，无法回读明文，不应写入 roadmap
+- [ ] 将 CORS 从全开放收敛为环境级 allowlist，并区分后台 API、公开页面、管理后台的访问域名策略
+
+### 发布治理与运营门槛
+
+- [ ] 建立外部事件运营台：统一查看 `webhook / email / crm / analytics / payment` 时间线，支持失败重试、手动重放、人工补偿与 `trace_id` 关联
+- [ ] 建立支付运营后台：订单/授权/捕获/退款/取消台账、对账差异视图、退款审批、争议处理与财务导出
+- [ ] 建立发布站点治理能力：自定义域名与证书状态、页面版本历史、SEO 元数据、`robots / sitemap`、CDN purge 与回滚审计
+
+### 运行时兼容与生产验证门槛
+
+- [ ] 将 FastAPI `@app.on_event(startup/shutdown)` 替换为 `lifespan`，消除框架弃用 warning
+- [ ] 建立租户级资源保护：并发会话上限、token / 成本配额、公共接口调用额度、异常流量自动熔断
+- [ ] 建立浏览器 E2E、synthetic probe、发布后 smoke test、备份恢复演练与灾难恢复演练
+
+## 未来上线扩展需完成
+
+### 核心功能扩展
+
+- [x] 重构结果页为 `founder decision brief`：首屏优先展示 `go / no-go`、核心原因、预算消耗、关键风险、建议立即执行的 `3-5` 个动作，而不是先展示 artifact 列表
+- [x] 为结果页增加 `验证信号面板`：集中展示 `目标用户 / 核心卖点 / 定价建议 / CTA / go-no-go 条件 / 缺口`，降低用户自行拼装结论的成本
+- [x] 为结果页增加 `真实执行状态面板`：清晰区分 `published page / form / waitlist / preorder / payment / email / CRM / analytics` 的 `mock / real / ready / misconfigured / processed` 状态
+- [x] 为结果页增加 `用户视角下一步` 区块：按当前结论直接生成 `继续验证 / 修正文案 / 重新定价 / 补齐支付 / 发布落地页` 等动作入口
+- [x] 为普通用户增加 `history sessions` 首页入口：支持查看自己历史会话、最近结果、当前状态、更新时间、继续执行与重新打开结果页
+- [x] 为首页增加 `recent sessions` 卡片区：至少展示最近 `5-10` 个会话，并区分 `running / waiting_decision / completed / failed`
+- [ ] 为普通用户补齐 `session detail discoverability`：从首页可直接回到最近一次会话、最近一次结果页、最近一次待处理决策
+
+### 运营与商业化
+
+- [ ] 建立订阅套餐、配额、用量计费、账单与发票能力
+- [ ] 建立团队工作区、成员邀请、角色权限、项目级访问控制
+- [ ] 建立客服与运营后台：会话检索、执行重放、人工补偿、导出与封禁
+
+### 数据与合规
+
+- [ ] 建立数据保留策略、租户级备份恢复、对象存储清理与归档
+- [ ] 建立隐私合规能力：数据导出、删除请求、敏感字段脱敏、操作审计
+- [ ] 建立密钥轮换、第三方凭据健康检查与失效告警
+
+### 增长与复用
+
+- [ ] 建立项目对比、历史复盘、模板复用、最佳实践推荐
+- [ ] 建立转化漏斗分析、渠道归因、A/B 实验与留存看板
+- [ ] 建立可复用的行业/场景模板市场与预置执行方案
+
+### 工程与运维扩展
+
+- [ ] 建立 `staging / production` 环境分层、发布审批、灰度发布与回滚编排
+- [ ] 建立错误追踪、性能基线、SLO/SLI、值班告警与事故复盘机制
+- [ ] 建立环境初始化脚本、容器化部署、CI/CD 与端到端自动化回归
+
+## 历史未完成补充池
+
+以下条目来自此前 roadmap，当前不一定属于最优先主链路，但保留进入长期 backlog，后续可按阶段回收。
+
+### 协作与权限
+
+- [ ] 团队协作
+- [ ] 评论与批注
+- [ ] 共享决策流
+- [ ] 审计日志
+- [ ] 角色权限控制：`owner / operator / viewer`
+
+### 外部商业闭环
+
+- [ ] 接入真实支付平台
+- [ ] 接入真实发布平台或 `waitlist` 工具
+- [ ] 接入邮件、消息通知和 `webhook`
+- [ ] 接入第三方表单、`CRM`、分析工具
+- [ ] 建立真实落地页发布与反馈回收链路
+
+### 工程化与运维
+
+- [ ] `CI/CD`
+- [ ] 端到端自动化测试
+- [ ] 错误追踪
+- [ ] 日志聚合
+- [ ] 性能监控
+- [ ] 配置分层：`local / staging / production`
+- [ ] 容器化部署
+- [ ] 环境初始化脚本
+
+### 保留规则
+
+- [ ] 以上条目保留，不视为废弃
+- [ ] 当前优先顺序仍以 `P0 -> P1 -> P2 -> P3` 为主
+- [ ] 当主控编排、动态任务图、商业原子动作模型稳定后，再决定这些条目的回收顺序
+
+## 近期执行建议
+
+1. 先完成 `单 idea 入口 + 自动场景识别 + 自动预算建议`
+2. 再完成 `动态任务图生成`
+3. 再完成 `商业原子动作知识模型`
+4. 再完成 `token / 风险 / 恢复` 三个控制面板
+5. 最后扩展真实外部执行器与更完整交付物
+
+6. 将 FastAPI `@app.on_event(startup/shutdown)` 替换为 `lifespan`，消除框架级 warning
+
+normal@example.com
+normal
